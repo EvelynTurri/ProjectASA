@@ -1,0 +1,7 @@
+;; problem file: problem-vaccum_cleaner_firstfloor.pddl
+(define (problem vaccum_cleaner_firstfloor)
+    (:domain vaccum_cleaner_firstfloor)
+    (:objects master_bedroom master_bathroom children_bedroom children_bathroom wardrobe greenhouse hallway_firstfloor landing_firstfloor off on vaccum_cleaner_firstfloor)
+	(:init (room master_bedroom) (room master_bathroom) (room children_bedroom) (room children_bathroom) (room wardrobe) (room greenhouse) (room hallway_firstfloor) (room landing_firstfloor) (room1 master_bedroom) (room2 master_bathroom) (room3 children_bedroom) (room4 children_bathroom) (room5 wardrobe) (room6 greenhouse) (room7 hallway_firstfloor) (room8 landing_firstfloor) (state off) (state on) (vaccum vaccum_cleaner_firstfloor) (adj master_bedroom master_bathroom) (adj master_bathroom master_bedroom) (adj master_bedroom wardrobe) (adj wardrobe master_bedroom) (adj hallway_firstfloor master_bedroom) (adj master_bedroom hallway_firstfloor) (adj hallway_firstfloor children_bedroom) (adj children_bedroom hallway_firstfloor) (adj hallway_firstfloor landing_firstfloor) (adj landing_firstfloor hallway_firstfloor) (adj children_bedroom children_bathroom) (adj children_bathroom children_bedroom) (adj landing_firstfloor greenhouse) (adj greenhouse landing_firstfloor) (in_room vaccum_cleaner_firstfloor wardrobe) (switched_off vaccum_cleaner_firstfloor) (in_base vaccum_cleaner_firstfloor))
+	(:goal (and (clean_first_floor vaccum_cleaner_firstfloor)))
+)
