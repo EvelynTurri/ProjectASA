@@ -8,10 +8,10 @@ const {CoffeeMakerGoal, CoffeeMakerIntention} = require('../Intention/CoffeeMake
 const {RollerShutterGoal, AllRollerShutterIntention} = require('../Intention/RollerShutterIntention')
 const {LightGoal, LightIntention} = require('../Intention/LightsIntention')
 var PlanningGoal = require("../pddl/PlanningGoal")
-const {Move, Switch, Clean, SwitchOn, LeaveChargerBase, CleanAllRoomsUnderground, CleanAllRoomsGround, CleanAllRoomsFirstFloor, RetryGoal_vc, RetryFourTimesIntention_vc} = require("../Blocksworld/PlanningVaccumCleanerAgents")
-
-
-
+const {Move, Switch, Clean, SwitchOn, LeaveChargerBase, CleanAllRoomsUnderground, CleanAllRoomsGround, CleanAllRoomsFirstFloor,  ReturnChargerBase, SwitchOff, CleanFloor, RetryGoal_vc, RetryFourTimesIntention_vc} = require("../Blocksworld/PlanningVaccumCleanerAgents")
+const {Activate, Deactivate} = require("../Blocksworld/SecuritySystemAgent")
+const {LockDoors, UnlockDoors, LockCheckStatus, UnlockCheckStatus, MessageDispatcher, Postman, PostmanAcceptAllRequest} = require("../Blocksworld/DoorsLockersAgent")
+//const {MessageDispatcher, Postman, PostmanAcceptAllRequest} = require("../pddl/Actions/MessageDispatcher")
 
 
 //AGENT
@@ -256,7 +256,7 @@ house.devices.vaccumCleanerGroundFloor.beliefs.declare('switched_off vaccum_clea
 house.devices.vaccumCleanerGroundFloor.beliefs.declare('in_base vaccum_cleaner_groundfloor')
 
 //Firstfloor VaccumCleaner Agent
-let {OnlinePlanning:Planning_FirstfloorVaccumCleaner} = require('../pddl/OnlinePlanner')([Move, Switch, Clean, SwitchOn, LeaveChargerBase, CleanAllRoomsFirstFloor])
+let {OnlinePlanning:Planning_FirstfloorVaccumCleaner} = require('../pddl/OnlinePlanner')([Move, Switch, Clean, SwitchOn, LeaveChargerBase, CleanAllRoomsFirstFloor])//, ReturnChargerBase, SwitchOff, CleanFloor])
 house.devices.vaccumCleanerFirstFloor.intentions.push(Planning_FirstfloorVaccumCleaner)
 house.devices.vaccumCleanerFirstFloor.intentions.push(RetryFourTimesIntention_vc)
 house.devices.vaccumCleanerFirstFloor.beliefs.declare('room master_bedroom')
@@ -304,6 +304,31 @@ house.devices.vaccumCleanerFirstFloor.beliefs.declare('switched_off vaccum_clean
 house.devices.vaccumCleanerFirstFloor.beliefs.declare('in_base vaccum_cleaner_firstfloor')
 
 
+//Security System Agent
+let {OnlinePlanning:Planning_SecuritySystem} = require('../pddl/OnlinePlanner')([Activate, Deactivate])
+house.devices.allarmSystem.intentions.push(Planning_SecuritySystem)
+house.devices.allarmSystem.intentions.push(RetryFourTimesIntention_vc)
+house.devices.allarmSystem.intentions.push(PostmanAcceptAllRequest)
+
+house.devices.allarmSystem.beliefs.declare('security_system house_security_system')
+house.devices.allarmSystem.beliefs.declare('deactivate house_security_system')
+house.devices.allarmSystem.postSubGoal(new Postman());
+
+//Doors Locker Agents
+let {OnlinePlanning:Planning_DoorsLocker} = require('../pddl/OnlinePlanner')([LockDoors, UnlockDoors, LockCheckStatus, UnlockCheckStatus])
+house.devices.doorsLocker.intentions.push(Planning_DoorsLocker);
+house.devices.doorsLocker.intentions.push(RetryFourTimesIntention_vc)
+house.devices.doorsLocker.intentions.push(PostmanAcceptAllRequest)
+house.devices.doorsLocker.postSubGoal(new Postman());
+
+
+house.devices.doorsLocker.beliefs.declare('door_locker house_door_lockers')
+house.devices.doorsLocker.beliefs.declare('security_system house_security_system')
+house.devices.doorsLocker.beliefs.declare('deactivate house_door_lockers')
+
+
+
+
 
 Clock.global.observe('mm', (mm) => {
     var time = Clock.global
@@ -326,6 +351,7 @@ Clock.global.observe('mm', (mm) => {
         house.people.Rose.moveTo(house.rooms.landingGround);
         house.people.Rose.moveTo(house.rooms.entryway);
         house.people.Rose.moveTo(house.rooms.kitchen);
+        //house.devices.doorsLocker.postSubGoal(new RetryGoal_vc( { goal: new PlanningGoal( { goal: ['deactivate house_door_lockers'] } ) } ))
     }
     if (time.hh == 7 && time.mm == 0) {
         console.log('\n',"Mark moves from the kitchen to the garage");
@@ -345,6 +371,7 @@ Clock.global.observe('mm', (mm) => {
         house.people.Rose.moveTo(house.rooms.garage);  
         console.log("Rose leaves the house"); 
         house.devices.vaccumCleanerFirstFloor.postSubGoal(new RetryGoal_vc( { goal: new PlanningGoal( { goal: ['clean_first_floor vaccum_cleaner_firstfloor'] } ) } ))
+        
             
     }
     if(time.hh==14 && time.mm==0) {
@@ -355,6 +382,9 @@ Clock.global.observe('mm', (mm) => {
         house.people.Rose.moveTo(house.rooms.landingGround);
         house.people.Rose.moveTo(house.rooms.entryway);
         house.people.Rose.moveTo(house.rooms.kitchen);
+        
+        
+        
     }
     if(time.hh==16 && time.mm==0) {
         console.log('\n', "Rose moves from the kitchen to the garage");
@@ -411,6 +441,7 @@ Clock.global.observe('mm', (mm) => {
         console.log('\n',"Mark and Rose go to sleep")
         house.devices.vaccumCleanerUnderground.postSubGoal(new RetryGoal_vc( { goal: new PlanningGoal( { goal: ['clean_underground_floor vaccum_cleaner_underground'] } ) } )) 
         house.devices.vaccumCleanerGroundFloor.postSubGoal(new RetryGoal_vc( { goal: new PlanningGoal( { goal: ['clean_ground_floor vaccum_cleaner_groundfloor'] } ) } ))
+        house.devices.doorsLocker.postSubGoal(new RetryGoal_vc( { goal: new PlanningGoal( { goal: ['activate house_door_lockers'] } ) } ))
     }
 
     if (time.dd == 1 && time.hh == 0 && time.mm == 0) {

@@ -114,10 +114,10 @@ class CleanAllRoomsFirstFloor extends Check {
         
     }
 }
-/*
+
 class ReturnChargerBase extends Check {
     static parameters = ['obj'];
-    static precondition = [ ['vaccum', 'obj'], ['switched_on', 'obj'], ['not_in_base', 'obj'], ['clean_all_rooms', 'obj']];
+    static precondition = [ ['vaccum', 'obj'], ['not_in_base', 'obj']];
     static effect = [ ['in_base', 'obj'] ];
     *exec ({obj}=parameters) {
         yield this.checkPreconditionAndApplyEffect()
@@ -130,7 +130,7 @@ class ReturnChargerBase extends Check {
 
 class SwitchOff extends Check {
     static parameters = ['obj'];
-    static precondition = [ ['vaccum', 'obj'], ['switched_on', 'obj'], ['in_base', 'obj'], ['clean_all_rooms', 'obj']];
+    static precondition = [ ['vaccum', 'obj'], ['clean_all_rooms_first', 'obj']];
     static effect = [ ['switched_off', 'obj'] ];
     *exec ({obj}=parameters) {
             yield this.checkPreconditionAndApplyEffect()
@@ -138,7 +138,18 @@ class SwitchOff extends Check {
             this.agent.beliefs.declare('switched_off' + ' ' + obj), this.agent.beliefs.undeclare('switched_on' + ' ' + obj);
     }
 }
-*/
+
+
+class CleanFloor extends Check {
+    static parameters = ['obj'];
+    static precondition = [ ['vaccum', 'obj'], ['switched_off', 'obj']];
+    static effect = [ ['clean_first_floor', 'obj'] ];
+    *exec ({obj}=parameters) {
+            yield this.checkPreconditionAndApplyEffect()
+            this.agent.switchOff(obj);
+            this.agent.beliefs.declare('clean_first_floor' + ' ' + obj);
+    }
+}
 class RetryGoal_vc extends Goal {}
 
 class RetryFourTimesIntention_vc extends Intention {
@@ -157,4 +168,4 @@ class RetryFourTimesIntention_vc extends Intention {
 }
 
 
-module.exports = {Move, Switch, Clean, SwitchOn, LeaveChargerBase, CleanAllRoomsUnderground, CleanAllRoomsGround, CleanAllRoomsFirstFloor, RetryGoal_vc, RetryFourTimesIntention_vc}
+module.exports = {Move, Switch, Clean, SwitchOn, LeaveChargerBase, CleanAllRoomsUnderground, CleanAllRoomsGround, CleanAllRoomsFirstFloor, ReturnChargerBase, SwitchOff, CleanFloor, RetryGoal_vc, RetryFourTimesIntention_vc}

@@ -1,14 +1,14 @@
 const Observable = require("../../Utils/Observable");
+const Agent = require("../../bdi/Agent")
 
-class AllarmSystem extends Observable {
-    constructor(house, name, room) {
-        super(house, name, room);
+class AllarmSystem extends Agent {
+    constructor(house, name) {
+        super(house, name);
         this.house = house;
         this.name = name;
-        this.room = room;
 
-        this.set('active', true);
-        this.set('alert', false);
+        this.active = true;
+        this.alert = false;
     }
 
     activate() {

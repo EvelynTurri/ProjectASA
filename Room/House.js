@@ -9,6 +9,7 @@ const Person = require("../Person/Person");
 const AllarmSystem = require("../Devices/GeneralDevices/AllarmSystem");
 const MovingSensor = require("../Devices/GeneralDevices/MovingSensors");
 const RollerShutter = require('../Devices/GeneralDevices/RollerShutter');
+const DoorsLocker = require("../Devices/GeneralDevices/DoorsLocker")
 
 //UNDERGROUND FLOOR
 const Car = require("../Devices/00_UndergroundFloor/Car");
@@ -97,7 +98,8 @@ class House {
             rollerShutterChildrenBathroom: new RollerShutter(this, 'roller_shutter_children_bathroom', this.rooms.childrenBathroom),
             rollerShutterGreenhouse: new RollerShutter(this, 'roller_shutter_greenhouse', this.rooms.greenhouse),
             rollerShutterLandingFirstFloor: new RollerShutter(this, 'roller_shutter_landing_firstfloor', this.rooms.landingFirstFloor),
-
+            doorsLocker: new DoorsLocker(this, 'doors_locker'),
+            
             //LIGHTS
             lightGarage : new Light(this, 'light_garage', this.rooms.garage),
             lightBilliardRoom : new Light(this, 'light_billiard_room', this.rooms.billiardRoom),

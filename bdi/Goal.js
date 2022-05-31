@@ -1,12 +1,15 @@
+const Observable = require("../utils/Observable")
 
 var nextId = 0
 
 /**
  * @class Goal
  */
-class Goal {
+class Goal extends Observable{
 
     constructor (parameters = {}) {
+        super({achieved: false})
+        
         this.id = nextId++
 
         /** @type {*} parameters */

@@ -1,4 +1,6 @@
 const Observable = require('../../Utils/Observable')
+const Goal = require('../../bdi/Goal')
+const Intention = require('../../bdi/Intention')
 
 class MessageDispatcher extends Observable {
     
@@ -34,4 +36,26 @@ class MessageDispatcher extends Observable {
 
 }
 
-module.exports = MessageDispatcher
+class Postman extends Goal {
+}
+
+class PostmanAcceptAllRequest extends Intention {
+    static applicable (goal) {
+        return goal instanceof Postman
+    }
+    *exec (parameters) {
+        var myMessageDispatcher = MessageDispatcher.authenticate(this.agent)
+        while (true) {
+            yield myMessageDispatcher.notifyChange('newMessageReceived')
+            let newMessage = myMessageDispatcher.readMessage()
+            if (newMessage && newMessage instanceof Goal) {
+                this.log('Reading received message', newMessage.toString())
+                // console.log(newMessage)
+                yield this.agent.postSubGoal(newMessage)
+            }
+        }
+    }
+}
+
+
+module.exports = {MessageDispatcher, Postman, PostmanAcceptAllRequest}
