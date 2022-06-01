@@ -19,6 +19,7 @@
         (room4 ?r4)
         (room5 ?r5)
         (room6 ?r6)
+        (clean_all_groundfloor ?obj)
         (clean_ground_floor ?obj)              
     )
     
@@ -105,6 +106,39 @@
                 (clean ?obj ?r4)
                 (clean ?obj ?r5)
                 (clean ?obj ?r6)
+            )
+            :effect (and
+                (clean_all_groundfloor ?obj)
+            )
+        )
+        
+        (:action ReturnChargerBase
+            :parameters (?obj)
+            :precondition (and
+                (vaccum ?obj)
+                (not_in_base ?obj)
+            )
+            :effect (and
+                (in_base ?obj)
+            )
+        )
+        
+        (:action SwitchOff
+            :parameters (?obj)
+            :precondition (and
+                (vaccum ?obj)
+                (in_base ?obj)
+            )
+            :effect (and
+                (switched_off ?obj)
+            )
+        )
+        
+        (:action CleanGroundFloor
+            :parameters (?obj)
+            :precondition (and
+                (vaccum ?obj)
+                (clean_all_groundfloor ?obj)
             )
             :effect (and
                 (clean_ground_floor ?obj)

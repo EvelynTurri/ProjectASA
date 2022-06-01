@@ -3,39 +3,47 @@ const Observable = require("../../Utils/Observable");
 
 class ChargingBaseVacuumCleaner extends Agent {
 
-    constructor(house, name, vacuumCleaner, floor) {
-        super(house, name, vacuumCleaner, floor);
+    constructor(house, name, floor) {
+        super(house, name, floor);
         this.house = house;
         this.name = name;
-        this.vacuumCleaner = vacuumCleaner;
+        //this.vacuumCleaner = vacuumCleaner;
         this.floor = floor;
 
-        this.set('status', 'off');
-        this.set('charging', false);
+        this.vaccum = 'in_base'
+        //this.set('status', 'off');
+        //this.set('charging', false);
     }
 
-    switchOn() {
-        if (this.status == 'off') {
-            this.status = 'on';
-            console.log('The charging base of the vaccum cleaner switches on');
-        } else {
-            console.log('The charging base of the vaccum cleaner is already switched on');
-        }
+    sendVaccum() {
+        this.vaccum = 'out_base'
     }
 
-    switchOff() {
-        if (this.status == 'on') {
-            this.status = 'off';
-            console.log('The charging base of the vaccum cleaner switches off');
-        } else {
-            console.log('The charging base of the vaccum cleaner is already switched off');
-        }
+    receiveVaccum() {
+        this.vaccum = 'in_base'
     }
+    // switchOn() {
+    //     if (this.status == 'off') {
+    //         this.status = 'on';
+    //         console.log('The charging base of the vaccum cleaner switches on');
+    //     } else {
+    //         console.log('The charging base of the vaccum cleaner is already switched on');
+    //     }
+    // }
 
-    recharge() {
-        this.charging = true;
-        console.log("Start to charge the vaccum cleaner")
-    }
+    // switchOff() {
+    //     if (this.status == 'on') {
+    //         this.status = 'off';
+    //         console.log('The charging base of the vaccum cleaner switches off');
+    //     } else {
+    //         console.log('The charging base of the vaccum cleaner is already switched off');
+    //     }
+    // }
+
+    // recharge() {
+    //     this.charging = true;
+    //     console.log("Start to charge the vaccum cleaner")
+    // }
 }
 
 module.exports = ChargingBaseVacuumCleaner

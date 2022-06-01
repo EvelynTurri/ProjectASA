@@ -127,8 +127,12 @@ class House {
             //VACCUM CLEANER
             vaccumCleanerUnderground : new VaccumCleaner(this, 'vaccum_cleaner_underground', this.floors.undergroundFloor),
             vaccumCleanerGroundFloor : new VaccumCleaner(this, 'vaccum_cleaner_groundfloor', this.floors.groundFloor),
-            vaccumCleanerFirstFloor : new VaccumCleaner(this, 'vaccum_cleaner_firstfloor', this.floors.firstFloor)
-            //chargingBaseUnderground : new ChargingBaseVacuumCleaner(this, 'charging_base_underground', this.devices.vaccumCleanerUnderground, this.floors.undergroundFloor)
+            vaccumCleanerFirstFloor : new VaccumCleaner(this, 'vaccum_cleaner_firstfloor', this.floors.firstFloor),
+
+            //CHARGING BASE VACCUM CLEANER
+            chargingBaseUnderground : new ChargingBaseVacuumCleaner(this, 'charging_base_underground', this.floors.undergroundFloor),
+            chargingBaseGroundFloor : new ChargingBaseVacuumCleaner(this, 'charging_base_groundfloor', this.floors.groundFloor),
+            chargingBaseFirstFloor : new ChargingBaseVacuumCleaner(this, 'charging_base_firstfloor', this.floors.firstFloor)
 
         }
 

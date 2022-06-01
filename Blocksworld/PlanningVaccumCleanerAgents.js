@@ -3,6 +3,8 @@ const Agent = require('../bdi/Agent')
 const Goal = require('../bdi/Goal')
 const Intention = require('../bdi/Intention')
 const PlanningGoal = require('../pddl/PlanningGoal')
+const Observable = require('../Utils/Observable')
+const {MessageDispatcher, Postman, PostmanAcceptAllRequest} = require('../pddl/Actions/MessageDispatcher')
 
 class Check extends pddlActionIntention{
     async checkPreconditionAndApplyEffect () {
@@ -78,6 +80,16 @@ class LeaveChargerBase extends Check {
             this.agent.leaveChargerBase();
             this.agent.beliefs.declare('not_in_base' + ' ' + obj);
             this.agent.beliefs.undeclare('in_base' + ' ' + obj)
+            if (this.agent.name == 'vaccum_cleaner_underground') {
+                MessageDispatcher.authenticate(this.agent).sendTo('charging_base_underground', new PlanningGoal( { goal: ['out vaccum_cleaner_underground charging_base_underground'] } ))
+            } 
+            if (this.agent.name == 'vaccum_cleaner_groundfloor') {
+                MessageDispatcher.authenticate(this.agent).sendTo('charging_base_groundfloor', new PlanningGoal( { goal : ['out vaccum_cleaner_groundfloor charging_base_groundfloor'] } ))
+            }
+            if (this.agent.name == 'vaccum_cleaner_firstfloor') {
+                MessageDispatcher.authenticate(this.agent).sendTo('charging_base_firstfloor', new PlanningGoal( { goal: ['out vaccum_cleaner_firstfloor charging_base_firstfloor'] } ))
+            }
+            
         
     }
 }
@@ -85,10 +97,11 @@ class LeaveChargerBase extends Check {
 class CleanAllRoomsUnderground extends Check {
     static parameters = ['obj', 'r1', 'r2', 'r3', 'r4', 'r5'];
     static precondition = [ ['vaccum', 'obj'], ['room1', 'r1'], ['room2', 'r2'], ['room3', 'r3'], ['room4', 'r4'], ['room5', 'r5'], ['clean', 'obj', 'r1'], ['clean', 'obj', 'r2'], ['clean', 'obj', 'r3'], ['clean', 'obj', 'r4'], ['clean', 'obj', 'r5']];
-    static effect = [ ['clean_underground_floor', 'obj'] ];
+    static effect = [ ['clean_all_underground', 'obj'] ];
     *exec ({obj}=parameters) {
         yield this.checkPreconditionAndApplyEffect()
-            this.agent.beliefs.declare('clean_underground_floor' + ' ' + obj);
+            this.agent.beliefs.declare('clean_all_underground' + ' ' + obj);
+            MessageDispatcher.authenticate(this.agent).sendTo('charging_base_underground', new PlanningGoal( { goal: ['in vaccum_cleaner_underground charging_base_underground'] } ))
         
     }
 }
@@ -96,10 +109,11 @@ class CleanAllRoomsUnderground extends Check {
 class CleanAllRoomsGround extends Check {
     static parameters = ['obj', 'r1', 'r2', 'r3', 'r4', 'r5', 'r6'];
     static precondition = [ ['vaccum', 'obj'], ['room1', 'r1'], ['room2', 'r2'], ['room3', 'r3'], ['room4', 'r4'], ['room5', 'r5'], ['room6', 'r6'], ['clean', 'obj', 'r1'], ['clean', 'obj', 'r2'], ['clean', 'obj', 'r3'], ['clean', 'obj', 'r4'], ['clean', 'obj', 'r5'], ['clean', 'obj', 'r6']];
-    static effect = [ ['clean_ground_floor', 'obj'] ];
+    static effect = [ ['clean_all_groundfloor', 'obj'] ];
     *exec ({obj}=parameters) {
         yield this.checkPreconditionAndApplyEffect()
-            this.agent.beliefs.declare('clean_ground_floor' + ' ' + obj);
+            this.agent.beliefs.declare('clean_all_groundfloor' + ' ' + obj);
+            MessageDispatcher.authenticate(this.agent).sendTo('charging_base_groundfloor', new PlanningGoal( { goal: ['in vaccum_cleaner_groundfloor charging_base_groundfloor'] } ))
         
     }
 }
@@ -107,13 +121,15 @@ class CleanAllRoomsGround extends Check {
 class CleanAllRoomsFirstFloor extends Check {
     static parameters = ['obj', 'r1', 'r2', 'r3', 'r4', 'r5', 'r6', 'r7', 'r8'];
     static precondition = [ ['vaccum', 'obj'], ['room1', 'r1'], ['room2', 'r2'], ['room3', 'r3'], ['room4', 'r4'], ['room5', 'r5'], ['room6', 'r6'], ['room7', 'r7'], ['room8', 'r8'], ['clean', 'obj', 'r1'], ['clean', 'obj', 'r2'], ['clean', 'obj', 'r3'], ['clean', 'obj', 'r4'], ['clean', 'obj', 'r5'], ['clean', 'obj', 'r6'], ['clean', 'obj', 'r7'], ['clean', 'obj', 'r8']];
-    static effect = [ ['clean_first_floor', 'obj'] ];
+    static effect = [ ['clean_all_firstfloor', 'obj'] ];
     *exec ({obj}=parameters) {
         yield this.checkPreconditionAndApplyEffect()
-            this.agent.beliefs.declare('clean_first_floor' + ' ' + obj);
+            this.agent.beliefs.declare('clean_all_firstfloor' + ' ' + obj);
+            MessageDispatcher.authenticate(this.agent).sendTo('charging_base_firstfloor', new PlanningGoal( { goal: ['in vaccum_cleaner_firstfloor charging_base_firstfloor'] } ))
         
     }
 }
+
 
 class ReturnChargerBase extends Check {
     static parameters = ['obj'];
@@ -130,7 +146,7 @@ class ReturnChargerBase extends Check {
 
 class SwitchOff extends Check {
     static parameters = ['obj'];
-    static precondition = [ ['vaccum', 'obj'], ['clean_all_rooms_first', 'obj']];
+    static precondition = [ ['vaccum', 'obj'], ['in_base', 'obj']];
     static effect = [ ['switched_off', 'obj'] ];
     *exec ({obj}=parameters) {
             yield this.checkPreconditionAndApplyEffect()
@@ -139,10 +155,31 @@ class SwitchOff extends Check {
     }
 }
 
-
-class CleanFloor extends Check {
+class CleanUndergroundFloor extends Check {
     static parameters = ['obj'];
-    static precondition = [ ['vaccum', 'obj'], ['switched_off', 'obj']];
+    static precondition = [ ['vaccum', 'obj'], ['clean_all_underground', 'obj']];
+    static effect = [ ['clean_underground_floor', 'obj'] ];
+    *exec ({obj}=parameters) {
+            yield this.checkPreconditionAndApplyEffect()
+            this.agent.switchOff(obj);
+            this.agent.beliefs.declare('clean_underground_floor' + ' ' + obj);
+    }
+}
+
+class CleanGroundFloor extends Check {
+    static parameters = ['obj'];
+    static precondition = [ ['vaccum', 'obj'], ['clean_all_groundfloor', 'obj']];
+    static effect = [ ['clean_ground_floor', 'obj'] ];
+    *exec ({obj}=parameters) {
+            yield this.checkPreconditionAndApplyEffect()
+            this.agent.switchOff(obj);
+            this.agent.beliefs.declare('clean_ground_floor' + ' ' + obj);
+    }
+}
+
+class CleanFirstFloor extends Check {
+    static parameters = ['obj'];
+    static precondition = [ ['vaccum', 'obj'], ['clean_all_firstfloor', 'obj']];
     static effect = [ ['clean_first_floor', 'obj'] ];
     *exec ({obj}=parameters) {
             yield this.checkPreconditionAndApplyEffect()
@@ -150,22 +187,9 @@ class CleanFloor extends Check {
             this.agent.beliefs.declare('clean_first_floor' + ' ' + obj);
     }
 }
-class RetryGoal_vc extends Goal {}
-
-class RetryFourTimesIntention_vc extends Intention {
-    static applicable (goal) {
-        return goal instanceof RetryGoal_vc
-    }
-    *exec ({goal}=parameters) {
-        for(let i=0; i<4; i++) {
-            let goalAchieved = yield this.agent.postSubGoal( goal )
-            if (goalAchieved)
-                return;
-            this.log('wait for something to change on beliefset before retrying for the ' + (i+2) + 'th time goal', goal.toString())
-            yield this.agent.beliefs.notifyAnyChange()
-        }
-    }
-}
 
 
-module.exports = {Move, Switch, Clean, SwitchOn, LeaveChargerBase, CleanAllRoomsUnderground, CleanAllRoomsGround, CleanAllRoomsFirstFloor, ReturnChargerBase, SwitchOff, CleanFloor, RetryGoal_vc, RetryFourTimesIntention_vc}
+
+
+
+module.exports = {Move, Switch, Clean, SwitchOn, LeaveChargerBase, CleanAllRoomsUnderground, CleanAllRoomsGround, CleanAllRoomsFirstFloor, ReturnChargerBase, SwitchOff, CleanUndergroundFloor, CleanGroundFloor, CleanFirstFloor}

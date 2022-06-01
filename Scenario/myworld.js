@@ -8,10 +8,12 @@ const {CoffeeMakerGoal, CoffeeMakerIntention} = require('../Intention/CoffeeMake
 const {RollerShutterGoal, AllRollerShutterIntention} = require('../Intention/RollerShutterIntention')
 const {LightGoal, LightIntention} = require('../Intention/LightsIntention')
 var PlanningGoal = require("../pddl/PlanningGoal")
-const {Move, Switch, Clean, SwitchOn, LeaveChargerBase, CleanAllRoomsUnderground, CleanAllRoomsGround, CleanAllRoomsFirstFloor,  ReturnChargerBase, SwitchOff, CleanFloor, RetryGoal_vc, RetryFourTimesIntention_vc} = require("../Blocksworld/PlanningVaccumCleanerAgents")
+const {Move, Switch, Clean, SwitchOn, LeaveChargerBase, CleanAllRoomsUnderground, CleanAllRoomsGround, CleanAllRoomsFirstFloor,  ReturnChargerBase, SwitchOff, CleanUndergroundFloor, CleanGroundFloor, CleanFirstFloor} = require("../Blocksworld/PlanningVaccumCleanerAgents")
 const {Activate, Deactivate} = require("../Blocksworld/SecuritySystemAgent")
-const {LockDoors, UnlockDoors, LockCheckStatus, UnlockCheckStatus, MessageDispatcher, Postman, PostmanAcceptAllRequest} = require("../Blocksworld/DoorsLockersAgent")
-//const {MessageDispatcher, Postman, PostmanAcceptAllRequest} = require("../pddl/Actions/MessageDispatcher")
+const {LockDoors, UnlockDoors, LockCheckStatus, UnlockCheckStatus} = require("../Blocksworld/DoorsLockersAgent")
+const {RetryGoal_vc, RetryFourTimesIntention_vc} = require('../Blocksworld/RetryGoal')
+const {inChargerBase, outChargerBase} = require('../Blocksworld/ChargerBaseAgent')
+const {MessageDispatcher, Postman, PostmanAcceptAllRequest} = require("../pddl/Actions/MessageDispatcher")
 
 
 //AGENT
@@ -174,9 +176,12 @@ coffeeMakerAgent.postSubGoal(new CoffeeMakerGoal(house.devices.coffeMaker));
 
 
 //Underground VaccumCleaner Agent
-let {OnlinePlanning:Planning_UndergroundVaccumCleaner} = require('../pddl/OnlinePlanner')([Move, Switch, Clean, SwitchOn, LeaveChargerBase, CleanAllRoomsUnderground])
+let {OnlinePlanning:Planning_UndergroundVaccumCleaner} = require('../pddl/OnlinePlanner')([Move, Switch, Clean, SwitchOn, LeaveChargerBase, CleanAllRoomsUnderground , ReturnChargerBase, SwitchOff, CleanUndergroundFloor])
 house.devices.vaccumCleanerUnderground.intentions.push(RetryFourTimesIntention_vc)
 house.devices.vaccumCleanerUnderground.intentions.push(Planning_UndergroundVaccumCleaner)
+house.devices.vaccumCleanerUnderground.intentions.push(PostmanAcceptAllRequest)
+house.devices.vaccumCleanerUnderground.postSubGoal(new Postman())
+
 
 house.devices.vaccumCleanerUnderground.beliefs.declare('room garage')
 house.devices.vaccumCleanerUnderground.beliefs.declare('room laudry')
@@ -211,9 +216,12 @@ house.devices.vaccumCleanerUnderground.beliefs.declare('switched_off vaccum_clea
 house.devices.vaccumCleanerUnderground.beliefs.declare('in_base vaccum_cleaner_underground')
 
 //Ground VaccumCleaner Agent
-let {OnlinePlanning:Planning_GroundVaccumCleaner} = require('../pddl/OnlinePlanner')([Move, Switch, Clean, SwitchOn, LeaveChargerBase, CleanAllRoomsGround])
+let {OnlinePlanning:Planning_GroundVaccumCleaner} = require('../pddl/OnlinePlanner')([Move, Switch, Clean, SwitchOn, LeaveChargerBase, CleanAllRoomsGround,  ReturnChargerBase, SwitchOff, CleanGroundFloor])
 house.devices.vaccumCleanerGroundFloor.intentions.push(Planning_GroundVaccumCleaner)
 house.devices.vaccumCleanerGroundFloor.intentions.push(RetryFourTimesIntention_vc)
+house.devices.vaccumCleanerGroundFloor.intentions.push(PostmanAcceptAllRequest)
+house.devices.vaccumCleanerGroundFloor.postSubGoal(new Postman())
+
 house.devices.vaccumCleanerGroundFloor.beliefs.declare('room kitchen')
 house.devices.vaccumCleanerGroundFloor.beliefs.declare('room entryway')
 house.devices.vaccumCleanerGroundFloor.beliefs.declare('room living_room')
@@ -256,9 +264,12 @@ house.devices.vaccumCleanerGroundFloor.beliefs.declare('switched_off vaccum_clea
 house.devices.vaccumCleanerGroundFloor.beliefs.declare('in_base vaccum_cleaner_groundfloor')
 
 //Firstfloor VaccumCleaner Agent
-let {OnlinePlanning:Planning_FirstfloorVaccumCleaner} = require('../pddl/OnlinePlanner')([Move, Switch, Clean, SwitchOn, LeaveChargerBase, CleanAllRoomsFirstFloor])//, ReturnChargerBase, SwitchOff, CleanFloor])
+let {OnlinePlanning:Planning_FirstfloorVaccumCleaner} = require('../pddl/OnlinePlanner')([Move, Switch, Clean, SwitchOn, LeaveChargerBase, CleanAllRoomsFirstFloor,  ReturnChargerBase, SwitchOff, CleanFirstFloor])//, ReturnChargerBase, SwitchOff, CleanFloor])
 house.devices.vaccumCleanerFirstFloor.intentions.push(Planning_FirstfloorVaccumCleaner)
 house.devices.vaccumCleanerFirstFloor.intentions.push(RetryFourTimesIntention_vc)
+house.devices.vaccumCleanerFirstFloor.intentions.push(PostmanAcceptAllRequest)
+house.devices.vaccumCleanerFirstFloor.postSubGoal(new Postman())
+
 house.devices.vaccumCleanerFirstFloor.beliefs.declare('room master_bedroom')
 house.devices.vaccumCleanerFirstFloor.beliefs.declare('room master_bathroom')
 house.devices.vaccumCleanerFirstFloor.beliefs.declare('room children_bedroom')
@@ -326,6 +337,39 @@ house.devices.doorsLocker.beliefs.declare('door_locker house_door_lockers')
 house.devices.doorsLocker.beliefs.declare('security_system house_security_system')
 house.devices.doorsLocker.beliefs.declare('deactivate house_door_lockers')
 
+//Charging Base Agent
+//Underground
+let {OnlinePlanning:Planning_ChargingBase_Underground} = require('../pddl/OnlinePlanner')([inChargerBase, outChargerBase])
+house.devices.chargingBaseUnderground.intentions.push(Planning_ChargingBase_Underground);
+house.devices.chargingBaseUnderground.intentions.push(RetryFourTimesIntention_vc);
+house.devices.chargingBaseUnderground.intentions.push(PostmanAcceptAllRequest)
+house.devices.chargingBaseUnderground.postSubGoal(new Postman());
+
+house.devices.chargingBaseUnderground.beliefs.declare('charger_base charging_base_underground')
+house.devices.chargingBaseUnderground.beliefs.declare('vaccum vaccum_cleaner_underground')
+house.devices.chargingBaseUnderground.beliefs.declare('in vaccum_cleaner_underground charging_base_underground')
+
+//Ground Floor
+let {OnlinePlanning:Planning_ChargingBase_GroundFloor} = require('../pddl/OnlinePlanner')([inChargerBase, outChargerBase])
+house.devices.chargingBaseGroundFloor.intentions.push(Planning_ChargingBase_GroundFloor);
+house.devices.chargingBaseGroundFloor.intentions.push(RetryFourTimesIntention_vc);
+house.devices.chargingBaseGroundFloor.intentions.push(PostmanAcceptAllRequest)
+house.devices.chargingBaseGroundFloor.postSubGoal(new Postman());
+
+house.devices.chargingBaseGroundFloor.beliefs.declare('charger_base charging_base_groundfloor')
+house.devices.chargingBaseGroundFloor.beliefs.declare('vaccum vaccum_cleaner_groundfloor')
+house.devices.chargingBaseGroundFloor.beliefs.declare('in vaccum_cleaner_groundfloor charging_base_groundfloor')
+
+//First Floor
+let {OnlinePlanning:Planning_ChargingBase_FirstFloor} = require('../pddl/OnlinePlanner')([inChargerBase, outChargerBase])
+house.devices.chargingBaseFirstFloor.intentions.push(Planning_ChargingBase_FirstFloor);
+house.devices.chargingBaseFirstFloor.intentions.push(RetryFourTimesIntention_vc);
+house.devices.chargingBaseFirstFloor.intentions.push(PostmanAcceptAllRequest)
+house.devices.chargingBaseFirstFloor.postSubGoal(new Postman());
+
+house.devices.chargingBaseFirstFloor.beliefs.declare('charger_base charging_base_firstfloor')
+house.devices.chargingBaseFirstFloor.beliefs.declare('vaccum vaccum_cleaner_firstfloor')
+house.devices.chargingBaseFirstFloor.beliefs.declare('in vaccum_cleaner_firstfloor charging_base_firstfloor')
 
 
 

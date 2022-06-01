@@ -4,6 +4,7 @@ const Goal = require('../bdi/Goal')
 const Intention = require('../bdi/Intention')
 const PlanningGoal = require('../pddl/PlanningGoal')
 const Observable = require('../Utils/Observable')
+const {MessageDispatcher, Postman, PostmanAcceptAllRequest} = require('../pddl/Actions/MessageDispatcher')
 //const MessageDispatcher = require('../pddl/Actions/MessageDispatcher')
 
 class Check extends pddlActionIntention{
@@ -75,7 +76,7 @@ class LockCheckStatus extends Check {
     }
 }
 
-
+/*
 class MessageDispatcher extends Observable {
     
     static #dispatchers = {}
@@ -133,8 +134,8 @@ class PostmanAcceptAllRequest extends Intention {
         }
     }
 }
+*/
 
 
 
-
-module.exports = {LockDoors, UnlockDoors, LockCheckStatus, UnlockCheckStatus, MessageDispatcher, Postman, PostmanAcceptAllRequest}
+module.exports = {LockDoors, UnlockDoors, LockCheckStatus, UnlockCheckStatus}

@@ -1,6 +1,7 @@
 const Observable = require('../../Utils/Observable')
 const Goal = require('../../bdi/Goal')
 const Intention = require('../../bdi/Intention')
+//const MessageDispatcher = require('../../Blocksworld/DoorsLockersAgent')
 
 class MessageDispatcher extends Observable {
     
@@ -8,6 +9,7 @@ class MessageDispatcher extends Observable {
     static authenticate (senderAgent) {
         if (!(senderAgent.name in this.#dispatchers))
             this.#dispatchers[senderAgent.name] = new MessageDispatcher(senderAgent.name)
+            
         return this.#dispatchers[senderAgent.name]
     }
 
@@ -15,6 +17,7 @@ class MessageDispatcher extends Observable {
         super({newMessageReceived: false})
         this.name = name
         this.received = []
+        //this.#dispatcher = []
     }
     
     pushMessage (goal) {
@@ -28,13 +31,15 @@ class MessageDispatcher extends Observable {
     }
     
     async sendTo (to, goal) {
-        if (!to in this.constructor.#dispatchers)
+        if (!(to in this.constructor.#dispatchers))
             this.constructor.#dispatchers[to] = new MessageDispatcher(to)
+            //console.log()
         this.constructor.#dispatchers[to].pushMessage(goal)
         return goal.notifyChange('achieved')
     }
 
 }
+
 
 class Postman extends Goal {
 }
