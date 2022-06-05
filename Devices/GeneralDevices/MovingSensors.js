@@ -14,11 +14,6 @@ class MovingSensors extends Observable {
     }
 
     activate() {
-        //if (this.room.people_inRoom == 0) {
-        //    this.active = true;
-        //    console.log("The Moving sensor in room " + this.room + " has been activated");
-        //    this.room.people_inRoom +=1;
-        //} 
         this.active = true;
         console.log("The Moving sensor in room " + this.room + " has been activated");
     }

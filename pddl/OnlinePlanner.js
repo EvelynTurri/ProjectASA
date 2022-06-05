@@ -32,7 +32,6 @@ function setup (intentions = []) {
 
         async doPlan (domainFile, problemFile) {
 
-            // console.log(JSON.stringify( {domain: domainFile.content, problem: problemFile.content} ))
             var res = await fetch("http://solver.planning.domains/solve", {
                 method: "POST",
                 headers: {
@@ -45,9 +44,6 @@ function setup (intentions = []) {
                 return res;
             })
             
-            // console.log(res);
-            // console.log(res.result.plan);
-
             if (!res.result.plan && res.result.output.split('\n')[0] != ' --- OK.') {
                 this.log('No plan found')
                 this.log(res)
@@ -65,12 +61,9 @@ function setup (intentions = []) {
                 }
             }
 
-            // var previousNumber = 0
             for (let line of planStruct) {
-                // var number = line.shift()
                 var action = line.shift()
                 var args = line
-                // console.log(number, action, args)
                 var intentionClass = this.constructor.getAction(action)
                 var mappedArgs = {}
                 for (let index = 0; index < intentionClass.parameters.length; index++) {
@@ -112,17 +105,16 @@ function setup (intentions = []) {
                 }
                 previousStepGoals.push(
                     step.intention.run().catch( err => {
-                        throw err//new Error('Step failed');
+                        throw err
                     } )
                 )
             }
 
-            // wait for last steps to complete before finish blackbox plan execution intention
             yield Promise.all(previousStepGoals)
 
         }
 
-    } // end of class Blackbox extends Intention
+    } 
 
     for ( let intentionClass of intentions ) {
         OnlinePlanning.addAction(intentionClass)
@@ -131,14 +123,6 @@ function setup (intentions = []) {
     return {OnlinePlanning};
 }
 
-
-
-// var kitchenAgent = new Agent('kitchen')
-// kitchenAgent.intentions.push(DimOnLight)
-// kitchenAgent.intentions.push(Blackbox)
-
-// var blackbox = new Blackbox(kitchenAgent, new LightOn({l: 'light1'}), './tmp/domain-lights.pddl', './tmp/problem-lights.pddl')
-// blackbox.run()
 
 
 

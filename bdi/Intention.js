@@ -59,7 +59,7 @@ class Intention {
      * await Promise.resolve(); // microtask, this would still block all timers and IO from being executed!!!
      * await new Promise( res => setTimeout(res, 0)) // macrotask, queues together with other timers and IO
 
-     * @returns {Boolean}   
+     * @returns {Boolean}   true if success, otherwise false
      */
     async run () {
         this.log('Intention started');

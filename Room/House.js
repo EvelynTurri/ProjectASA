@@ -213,8 +213,6 @@ class House {
         
         //Initializing the people in the room
         this.rooms.masterBedroom.set('people_inRoom', 2);
-        
-        //this.devices.vaccumCleanerUnderground.connectChargerBase(this.devices.chargingBaseUnderground);
 
         this.people = {
             Mark : new Person(this, 'Mark'),

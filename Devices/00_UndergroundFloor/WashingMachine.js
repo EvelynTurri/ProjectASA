@@ -14,7 +14,6 @@ class WashingMachine extends Observable {
     switchOn () {
         this.status = 'on'
         this.house.utilities.electricity.consumption += 100;
-        // Include some messages logged on the console!
         console.log('Washing Machine is switched on')
     }
 

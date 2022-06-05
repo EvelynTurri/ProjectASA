@@ -50,28 +50,11 @@ class VaccumCleaner extends Agent {
     }
 
     leaveChargerBase() {
-        /*
-        if (this.on_based == true && this.status_battery == 'fully_charged') {
-            this.on_based = false;
-            this.battery -= 10;
-            this.log('The ', this.name, ' left the charger base')
-        } else {
-
-        }
-        */
        this.on_based = 'not_in_base'
         this.log('The ', this.name, ' left the charger base')
     }
 
     returnChargerBase() {
-        /*
-        if (this.on_based == false) {
-            this.on_based = true;
-            this.battery += 10;
-            this.log('The ', this.name, ' return to the charger base')
-        } else {
-
-        }*/
         this.on_based = 'in_base'
         this.log('The ', this.name, ' returns to the charger base')
     }

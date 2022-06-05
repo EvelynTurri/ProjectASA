@@ -1,9 +1,5 @@
 const pddlActionIntention = require('../pddl/Actions/pddlActionIntention')
-const Agent = require('../bdi/Agent')
-const Goal = require('../bdi/Goal')
-const Intention = require('../bdi/Intention')
 const PlanningGoal = require('../pddl/PlanningGoal')
-const Observable = require('../Utils/Observable')
 const {MessageDispatcher, Postman, PostmanAcceptAllRequest} = require('../pddl/Actions/MessageDispatcher')
 
 class Check extends pddlActionIntention{

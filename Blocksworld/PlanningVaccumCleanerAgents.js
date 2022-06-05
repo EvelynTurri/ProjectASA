@@ -13,7 +13,7 @@ class Check extends pddlActionIntention{
             await new Promise(res=>setTimeout(res,1000))
         }
         else
-            throw new Error('pddl precondition not valid'); //Promise is rejected!
+            throw new Error('pddl precondition not valid'); 
     }
 }
 
@@ -187,9 +187,5 @@ class CleanFirstFloor extends Check {
             this.agent.beliefs.declare('clean_first_floor' + ' ' + obj);
     }
 }
-
-
-
-
 
 module.exports = {Move, Switch, Clean, SwitchOn, LeaveChargerBase, CleanAllRoomsUnderground, CleanAllRoomsGround, CleanAllRoomsFirstFloor, ReturnChargerBase, SwitchOff, CleanUndergroundFloor, CleanGroundFloor, CleanFirstFloor}

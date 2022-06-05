@@ -12,7 +12,7 @@ class Check extends pddlActionIntention{
             await new Promise(res=>setTimeout(res,0))
         }
         else
-            throw new Error('pddl precondition not valid'); //Promise is rejected!
+            throw new Error('pddl precondition not valid'); 
     }
 }
 
