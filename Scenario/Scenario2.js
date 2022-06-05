@@ -1,18 +1,10 @@
 /*
 --- VACUUM CLEANER SCENARIO ---
 */
-const Agent = require('../bdi/Agent')
 const House = require('../Room/House')
-const Room = require('../Room/Room')
 const Clock = require('../Utils/Clock')
-const {MovingSensorsGoal, MovingSensorsIntention} = require('../Intention/MovingSensorIntention')
-const {CoffeeMakerGoal, CoffeeMakerIntention} = require('../Intention/CoffeeMakerIntention')
-const {RollerShutterGoal, AllRollerShutterIntention} = require('../Intention/RollerShutterIntention')
-const {LightGoal, LightIntention} = require('../Intention/LightsIntention')
 var PlanningGoal = require("../pddl/PlanningGoal")
 const {Move, Switch, Clean, SwitchOn, LeaveChargerBase, CleanAllRoomsUnderground, CleanAllRoomsGround, CleanAllRoomsFirstFloor,  ReturnChargerBase, SwitchOff, CleanUndergroundFloor, CleanGroundFloor, CleanFirstFloor} = require("../Blocksworld/PlanningVaccumCleanerAgents")
-const {Activate, Deactivate} = require("../Blocksworld/SecuritySystemAgent")
-const {LockDoors, UnlockDoors, LockCheckStatus, UnlockCheckStatus} = require("../Blocksworld/DoorsLockersAgent")
 const {RetryGoal_vc, RetryFourTimesIntention_vc} = require('../Blocksworld/RetryGoal')
 const {inChargerBase, outChargerBase} = require('../Blocksworld/ChargerBaseAgent')
 const {MessageDispatcher, Postman, PostmanAcceptAllRequest} = require("../pddl/Actions/MessageDispatcher")
