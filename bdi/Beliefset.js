@@ -2,18 +2,13 @@ const Observable =  require('../utils/Observable')
 
 
 
-class Beliefset extends Observable { // Implementation based on Observable
-
-
-
+class Beliefset extends Observable { 
     #objectsMap;
     
     constructor () {
         super ({})
         this.#objectsMap = {}
     }
-
-
 
     addObject (obj) {
         if (!(typeof obj === 'string'))
@@ -30,8 +25,6 @@ class Beliefset extends Observable { // Implementation based on Observable
     get objects () {
         return Object.values(this.#objectsMap);
     }
-
-
 
     /**
      * call the declare method with false value
@@ -63,8 +56,6 @@ class Beliefset extends Observable { // Implementation based on Observable
         
         return changed
     }
-
-
 
     /**
      * @return {Array<String>}    Return an Array of String literals (possibly negated facts) e.g. 'light_on kitchen_light' or 'not light_on kitchen_light'
@@ -107,7 +98,6 @@ class Beliefset extends Observable { // Implementation based on Observable
                 else
                     return false;
         }
-
         return true;
     }
 

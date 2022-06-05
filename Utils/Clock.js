@@ -31,7 +31,7 @@ class Clock {
         Clock.#start = true
 
         while(Clock.#start) {
-            await new Promise( res => setTimeout(res, 0))
+            await new Promise( res => setTimeout(res, 60))
             
             var {dd, hh, mm} = Clock.global
             

@@ -37,7 +37,7 @@ class AllRollerShutterIntention extends Intention {
             yield
             if (Clock.global.hh == 20 && Clock.global.mm == 0) {
                 this.rollerShutter.pullDown();
-                this.log('sense: It\s 9 p.m.! Roller shutter are down');
+                this.log('sense: It\'s 9 p.m.! Roller shutter are down');
             }
         
         }
