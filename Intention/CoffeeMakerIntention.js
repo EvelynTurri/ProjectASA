@@ -34,12 +34,14 @@ class CoffeeMakerIntention extends Intention{
             if (Clock.global.hh == 6 && Clock.global.mm == 0) {
                 this.coffeeMaker.switchOn();
                 this.coffeeMaker.start();
+                this.agent.beliefs.declare('coffee_maker switch_on')
                 this.log('sense: It\'s 6 a.m.! Coffee Maker switches on and starts to make coffee')
             }
             yield
             if (Clock.global.hh == 6 && Clock.global.mm == 15) {
                 this.coffeeMaker.finish();
                 this.coffeeMaker.switchOff();
+                this.agent.beliefs.declare('coffee_maker switch_off')
                 this.log('sense: The coffee is ready and the coffee maker switches off')
             }
             

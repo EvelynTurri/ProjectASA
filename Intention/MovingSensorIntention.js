@@ -37,6 +37,7 @@ class MovingSensorsIntention extends Intention{
                     if (status == true) {
                         this.log('sense: sensor ' + s.name + ' perceives ' + status)
                     }
+                    this.agent.beliefs.declare(s.name)
                 }
             });
 

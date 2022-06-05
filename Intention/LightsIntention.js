@@ -47,6 +47,7 @@ class LightIntention extends Intention {
                 if (this.light.status == 'off') {
                     if (this.room.people_inRoom == 1) {
                         this.light.switchOnLight();
+                        this.agent.beliefs.declare(this.light.name, status)
                         this.log('sense: light ' + this.light.name + ' switched on');
                     }
                 }
@@ -55,6 +56,7 @@ class LightIntention extends Intention {
                 if (this.light.status == 'on') {
                     if (this.room.people_inRoom == 0) {
                         this.light.switchOffLight();
+                        this.agent.beliefs.declare(this.light.name, status)
                         this.log('sense: light ' + this.light.name + ' switched off');
                     }
                 }

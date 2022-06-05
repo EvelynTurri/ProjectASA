@@ -32,11 +32,13 @@ class AllRollerShutterIntention extends Intention {
             Clock.global.notifyChange('mm')
             if (Clock.global.hh == 6 && Clock.global.mm == 0) {
                 this.rollerShutter.liftUp(); 
+                this.agent.beliefs.declare('roller_shutter lift_up');
                 this.log('sense: It\'s 6 a.m.! Roller shutter are up');  
             }
             yield
             if (Clock.global.hh == 20 && Clock.global.mm == 0) {
                 this.rollerShutter.pullDown();
+                this.agent.beliefs.declare('roller_shutter pull_down');
                 this.log('sense: It\'s 9 p.m.! Roller shutter are down');
             }
         
