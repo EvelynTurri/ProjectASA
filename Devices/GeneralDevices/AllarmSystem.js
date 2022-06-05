@@ -13,7 +13,7 @@ class AllarmSystem extends Agent {
 
     activate() {
         this.active = true;
-        console.log('The alarm system is active');
+        console.log('The alarm system has been activated');
     }
 
     deactivate() {

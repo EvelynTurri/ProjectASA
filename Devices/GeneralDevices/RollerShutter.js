@@ -7,7 +7,7 @@ class RollerShutter extends Observable {
         this.house = house;
         this.name = name;
         this.room = room;
-        //this.set('room', );
+        
         this.set('status', 'down');
     }
 

@@ -11,7 +11,7 @@ class Check extends pddlActionIntention{
     async checkPreconditionAndApplyEffect () {
         if ( this.checkPrecondition() ) {
             this.applyEffect()
-            await new Promise(res=>setTimeout(res,1000))
+            await new Promise(res=>setTimeout(res, 0))
         }
         else
             throw new Error('pddl precondition not valid'); //Promise is rejected!

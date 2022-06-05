@@ -28,7 +28,6 @@ class inChargerBase extends Check {
             this.agent.beliefs.declare('in' + ' ' + v + ' ' + obj), this.agent.beliefs.undeclare('out' + ' ' + v + ' ' + obj); 
             MessageDispatcher.authenticate(this.agent).sendTo(v, new PlanningGoal({goal: [`switched_off ${v}`]}))
     }
-
 }
 
 class outChargerBase extends Check {

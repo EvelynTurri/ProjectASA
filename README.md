@@ -75,7 +75,7 @@ There are two different setups because if the timeout is too large for the rolle
 In the [LightsIntention](./Intention/LightsIntention.js) class I could not use `notifyChange('perceive')`, because there was another `notifyChange('perceive')` in the [MovingSensorIntention](./Intention/MovingSensorIntention.js) class, and one was overwriting the other.
 
 ### 3.
-For the moment, as example, the only 2 person moving in the house are mark and Rose. 
+For the moment, as example, the only 2 person moving in the house are Mark and Rose. 
 
 ### 4.
 The Clock stops after 2 days.

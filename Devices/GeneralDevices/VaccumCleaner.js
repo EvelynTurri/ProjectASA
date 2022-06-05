@@ -8,7 +8,6 @@ class VaccumCleaner extends Agent {
         this.house = house ;
         this.name = name;
         this.floor = floor;
-        //this.charger_base = charger_base;
 
         this.status = 'off';
         this.cleaning = false;
@@ -17,12 +16,6 @@ class VaccumCleaner extends Agent {
         this.status_battery = 'fully_charged';
         this.on_based = 'in_based';
         this.room = 'entrance';
-        //this.set('status', 'off');
-        //this.set('cleaning', false);
-        //this.set('charging', false);
-        //this.set('battery', 100);
-        //this.set('status_battery', 'fully_charged');
-        //this.set('on_based', true)
     }
 
     switchOn() {
@@ -57,6 +50,7 @@ class VaccumCleaner extends Agent {
     }
 
     leaveChargerBase() {
+        /*
         if (this.on_based == true && this.status_battery == 'fully_charged') {
             this.on_based = false;
             this.battery -= 10;
@@ -64,16 +58,22 @@ class VaccumCleaner extends Agent {
         } else {
 
         }
+        */
+       this.on_based = 'not_in_base'
+        this.log('The ', this.name, ' left the charger base')
     }
 
     returnChargerBase() {
+        /*
         if (this.on_based == false) {
             this.on_based = true;
             this.battery += 10;
             this.log('The ', this.name, ' return to the charger base')
         } else {
 
-        }
+        }*/
+        this.on_based = 'in_base'
+        this.log('The ', this.name, ' returns to the charger base')
     }
 
     move(before, after) {

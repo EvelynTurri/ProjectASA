@@ -20,7 +20,7 @@ class SingleHob extends Observable{
 
     setLevel (level) {
         this.level = level;
-    } 
+    }
 }
 
 module.exports = SingleHob

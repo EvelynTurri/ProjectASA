@@ -15,7 +15,7 @@ class Camera extends Observable {
         this.status = 'on';
     }
 
-    switchOn() {
+    switchOff() {
         this.status = 'off';
     }
 
