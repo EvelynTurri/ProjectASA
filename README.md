@@ -14,7 +14,11 @@ The aim is to have a smart house, but looking also for costs, electricity and co
 
 The house is reachable also from people with disability, thanks to the presence of an elevator, and the absence of stairs inside the house and between the rooms.
 
-
+## Initialize the environment
+It is suffcient to write this command line in the root directory of the project:
+```bash
+npm install
+```
 
 ## Run the code
 It is possible to run 4 different scenarios, and to run them is sufficient to use in the right folder of the file, the command line:
